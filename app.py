@@ -1,21 +1,32 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+import joblib
 
 app = FastAPI()
 
-class Student(BaseModel):
-    name: str
-    age:int
+model = joblib.load("saved_model/model.pkl")
 
-@app.post("/students")
-def create_student(student: Student):
-    return student
+class IrisData(BaseModel):
+    feature1: float
+    feature2: float
+    feature3: float
+    feature4: float
 
-from typing import Optional
+@app.post("/predict")
+def predict(data: IrisData):
 
-class Student(BaseModel):
-    name: str
-    age: Optional[int] = None
+    features = [[
+        data.feature1,
+        data.feature2,
+        data.feature3,
+        data.feature4
+    ]]
+
+    prediction = model.predict(features)
+
+    return {
+        "prediction": int(prediction[0])
+    }
 
 
 
