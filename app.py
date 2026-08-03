@@ -11,6 +11,11 @@ class Student(BaseModel):
 def create_student(student: Student):
     return student
 
+from typing import Optional
+
+class Student(BaseModel):
+    name: str
+    age: Optional[int] = None
 
 
 
